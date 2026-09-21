@@ -7,7 +7,7 @@ export default function Header() {
         <div className="flex h-20 items-center">
           <Link to="/" className="flex min-w-0 shrink items-center" aria-label="PetPlaybook.ai home">
             <img
-              src="/airo-assets/images/layouts/header/petplaybookai-seen-share-everything-esse"
+              src="/assets/petplaybook-header-logo.png"
               alt="PetPlaybook.ai"
               width={210}
               height={56}
