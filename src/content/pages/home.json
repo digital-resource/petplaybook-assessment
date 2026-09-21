@@ -1,0 +1,17 @@
+{
+  "hero": {
+    "eyebrow": "Pet care, kept personal",
+    "title": "Our website has moved to:",
+    "websiteButtonLabel": "petplaybook.com",
+    "websiteButtonUrl": "https://www.petplaybook.com",
+    "description": "PetPlaybook helps you capture the routines, comforts, preferences, and details that make your pet feel like home - so every trusted caregiver can offer consistent, confident care.",
+    "formLabel": "Join the early-access list",
+    "buttonLabel": "Get early access",
+    "confirmation": "You're on the early-access list. We'll be in touch soon.",
+    "finePrint": "One simple place for the details that matter most."
+  },
+  "supporting": {
+    "title": "The small details are the big things.",
+    "description": "From favorite treats to the right bedtime routine, your pet's everyday care deserves to travel with the people you trust."
+  }
+}

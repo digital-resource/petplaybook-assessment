@@ -1,0 +1,105 @@
+{
+  "pages/home/hero": {
+    "mediaType": "image",
+    "currentUrl": "/airo-assets/uploads/pages-home-hero-95de3e07.jpg",
+    "searchQuery": "",
+    "alternatives": [
+      "https://img1.wsimg.com/isteam/getty/2253846208",
+      "https://img1.wsimg.com/isteam/getty/2223188678",
+      "https://img1.wsimg.com/isteam/getty/1448469919",
+      "https://img1.wsimg.com/isteam/getty/1323098133",
+      "https://img1.wsimg.com/isteam/getty/2171953495"
+    ],
+    "userModified": true,
+    "createdAt": "2026-05-31T18:06:04.100Z",
+    "lastUpdated": "2026-05-31T18:11:16.244Z",
+    "alternativeGettyIds": [
+      "2253846208",
+      "2223188678",
+      "1448469919",
+      "1323098133",
+      "2171953495"
+    ],
+    "requestedSize": {
+      "width": 800,
+      "height": 1000,
+      "fit": "cover"
+    },
+    "orientations": "vertical",
+    "moods": "warm,natural",
+    "numberOfPeople": "one",
+    "minimumSize": "large",
+    "uploadSources": {
+      "/airo-assets/uploads/pages-home-hero-95de3e07.jpg": "npxx5jfllz_1780251076237_file_T5Vx7CcEEl.jpg"
+    }
+  },
+  "pages/home/tomorrow": {
+    "mediaType": "image",
+    "currentUrl": "https://img1.wsimg.com/isteam/getty/2197413642",
+    "searchQuery": "person walking dog golden hour peaceful nature path",
+    "alternatives": [
+      "https://img1.wsimg.com/isteam/getty/2171954720",
+      "https://img1.wsimg.com/isteam/getty/1284773513",
+      "https://img1.wsimg.com/isteam/getty/1320358505",
+      "https://img1.wsimg.com/isteam/getty/1785751483"
+    ],
+    "userModified": false,
+    "createdAt": "2026-05-31T18:06:05.974Z",
+    "lastUpdated": "2026-05-31T18:06:05.974Z",
+    "gettyId": "2197413642",
+    "alternativeGettyIds": [
+      "2171954720",
+      "1284773513",
+      "1320358505",
+      "1785751483"
+    ],
+    "requestedSize": {
+      "width": 700,
+      "height": 500,
+      "fit": "cover"
+    },
+    "orientations": "horizontal",
+    "moods": "warm,natural",
+    "minimumSize": "large"
+  },
+  "layouts/header/petplaybookai-seen-share-everything-esse": {
+    "mediaType": "image",
+    "currentUrl": "/airo-assets/uploads/layouts-header-petplaybookai-seen-share-everything-esse-5eed7b57.png",
+    "searchQuery": "petplaybook logo with dog fingerprint",
+    "alternatives": [
+      "/airo-assets/uploads/layouts-header-petplaybookai-seen-share-everything-esse-87182c1c.png",
+      "/airo-assets/uploads/layouts-header-petplaybookai-seen-share-everything-esse-1b78ec53.png",
+      "/airo-assets/uploads/layouts-header-petplaybookai-seen-share-everything-esse-b9acbaba.jpg",
+      "/airo-assets/uploads/layouts-header-petplaybookai-seen-share-everything-esse-ea1ff39c.png"
+    ],
+    "userModified": true,
+    "sourceRef": "src/layouts/parts/Header.tsx:20",
+    "createdAt": "2026-08-05T16:32:55.226Z",
+    "lastUpdated": "2026-08-12T16:11:48.827Z",
+    "uploadSources": {
+      "/airo-assets/uploads/layouts-header-petplaybookai-seen-share-everything-esse-b9acbaba.jpg": "npxx5jfllz_1785947654611_file_rzUygD5RLJ.jpg",
+      "/airo-assets/uploads/layouts-header-petplaybookai-seen-share-everything-esse-1b78ec53.png": "npxx5jfllz_1785954374336_file_DI000mOAmM.png",
+      "/airo-assets/uploads/layouts-header-petplaybookai-seen-share-everything-esse-87182c1c.png": "npxx5jfllz_1786148320538_file_HnSysSgUsm.png",
+      "/airo-assets/uploads/layouts-header-petplaybookai-seen-share-everything-esse-5eed7b57.png": "npxx5jfllz_1786551102803_file_D719KQATKn.png"
+    },
+    "uploadContentHash": "483fe1b128c4762896561658f4781df88142963bdbccf14561a6811879c57385",
+    "caption": "petplaybook logo with dog fingerprint"
+  },
+  "components/landing-herosection/happy-pet-owner-cuddling-her-puppy": {
+    "mediaType": "image",
+    "currentUrl": "/airo-assets/uploads/components-landing-herosection-happy-pet-owner-cuddling-her-puppy-1b78ec53.png",
+    "searchQuery": "petplaybook pet care app logo branding",
+    "alternatives": [
+      "/airo-assets/uploads/components-landing-herosection-happy-pet-owner-cuddling-her-puppy-1b2e242b.jpg"
+    ],
+    "userModified": true,
+    "sourceRef": "src/components/landing/HeroSection.tsx:90",
+    "createdAt": "2026-08-05T18:26:02.265Z",
+    "lastUpdated": "2026-08-05T18:26:36.792Z",
+    "uploadSources": {
+      "/airo-assets/uploads/components-landing-herosection-happy-pet-owner-cuddling-her-puppy-1b78ec53.png": "npxx5jfllz_1785954374336_file_DI000mOAmM.png"
+    },
+    "uploadContentHash": "8fb2f8e2a21cabd431bb3df95068b99b44c33150903570192b5e26a69ecbcc3b",
+    "caption": "petplaybook pet care app logo branding"
+  }
+}

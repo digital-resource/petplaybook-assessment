@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PetPlaybook&#x2122; Care Continuity Assessment</title>
+<style>
+  :root{
+    --parchment:#FAF6EC;
+    --card:#FFFFFF;
+    --forest:#233D34;
+    --forest-soft:#3E5C50;
+    --gold:#C9932E;
+    --gold-light:#F1D9A6;
+    --line:#E4DCC8;
+    --ink-soft:#6B6155;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--parchment);
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(35,61,52,0.06) 1px, transparent 0);
+    background-size:22px 22px;
+    font-family: 'Iowan Old Style','Palatino Linotype', Georgia, serif;
+    color:var(--forest);
+    padding:32px 16px 64px;
+    display:flex;
+    justify-content:center;
+  }
+  .wrap{
+    max-width:640px;
+    width:100%;
+  }
+  .masthead{
+    text-align:center;
+    margin-bottom:28px;
+  }
+  .paw{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:44px;height:44px;
+    border-radius:50%;
+    background:var(--forest);
+    margin-bottom:14px;
+  }
+  .paw svg{width:22px;height:22px;fill:var(--gold-light);}
+  .masthead h1{
+    font-size:1.7rem;
+    letter-spacing:0.01em;
+    margin:0 0 6px;
+    font-weight:700;
+  }
+  .masthead h1 sup{font-size:0.9rem;font-weight:400;}
+  .masthead p{
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color:var(--ink-soft);
+    font-size:0.95rem;
+    margin:0;
+    line-height:1.5;
+  }
+
+  .progress-track{
+    height:6px;
+    background:var(--line);
+    border-radius:99px;
+    overflow:hidden;
+    margin-bottom:8px;
+  }
+  .progress-fill{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,var(--gold),var(--forest-soft));
+    transition:width .35s ease;
+  }
+  .progress-label{
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size:0.78rem;
+    color:var(--ink-soft);
+    text-align:right;
+    margin-bottom:22px;
+    letter-spacing:0.02em;
+  }
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:28px 26px;
+    box-shadow:0 1px 2px rgba(35,61,52,0.04), 0 8px 24px -12px rgba(35,61,52,0.12);
+  }
+
+  /* Intro card */
+  .intro-eyebrow{
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size:0.72rem;
+    font-weight:600;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:10px;
+  }
+  .intro-title{
+    font-size:1.25rem;
+    line-height:1.4;
+    margin:0 0 6px;
+  }
+  .intro-sub{
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size:0.88rem;
+    color:var(--ink-soft);
+    margin:0 0 22px;
+    line-height:1.5;
+  }
+  .field-row{
+    display:flex;
+    gap:12px;
+    margin-bottom:12px;
+  }
+  .field-row .field{flex:1;}
+  .field{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+    margin-bottom:12px;
+  }
+  .field label{
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size:0.78rem;
+    font-weight:600;
+    color:var(--forest);
+    letter-spacing:0.02em;
+  }
+  .field input{
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size:0.95rem;
+    padding:11px 14px;
+    border:1.5px solid var(--line);
+    border-radius:9px;
+    background:var(--card);
+    color:var(--forest);
+    outline:none;
+    transition:border-color .15s ease;
+  }
+  .field input:focus{border-color:var(--forest);}
+  .field input.error{border-color:#c0392b;}
+  .field-error{
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size:0.75rem;
+    color:#c0392b;
+    display:none;
+  }
+  .field-error.show{display:block;}
+
+  .q-eyebrow{
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size:0.72rem;
+    font-weight:600;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:10px;
+  }
+  .q-text{
+    font-size:1.25rem;
+    line-height:1.4;
+    margin:0 0 22px;
+  }
+
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .option{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:13px 16px;
+    border:1.5px solid var(--line);
+    border-radius:10px;
+    cursor:pointer;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size:0.98rem;
+    transition:border-color .15s ease, background .15s ease, transform .1s ease;
+    background:var(--card);
+  }
+  .option:hover{border-color:var(--gold); background:#FFFCF5;}
+  .option:active{transform:scale(0.995);}
+  .option.selected{
+    border-color:var(--forest);
+    background:#F3F6F1;
+  }
+  .bullet{
+    width:20px;height:20px;
+    border-radius:50%;
+    border:2px solid var(--line);
+    flex:0 0 auto;
+    position:relative;
+  }
+  .option.selected .bullet{border-color:var(--forest);}
+  .option.selected .bullet::after{
+    content:'';
+    position:absolute;
+    inset:3px;
+    border-radius:50%;
+    background:var(--forest);
+  }
+  .option-label{flex:1;}
+  .option-val{
+    font-size:0.75rem;
+    color:var(--ink-soft);
+    font-variant-numeric:tabular-nums;
+  }
+
+  .nav-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:26px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  button{
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size:0.92rem;
+    font-weight:600;
+    border:none;
+    border-radius:9px;
+    padding:11px 20px;
+    cursor:pointer;
+    transition:opacity .15s ease, transform .1s ease;
+  }
+  button:active{transform:scale(0.98);}
+  button:disabled{opacity:0.35; cursor:not-allowed;}
+  .btn-primary{
+    background:var(--forest);
+    color:var(--gold-light);
+  }
+  .btn-primary:hover:not(:disabled){background:var(--forest-soft);}
+  .btn-ghost{
+    background:transparent;
+    color:var(--forest);
+    padding:11px 8px;
+  }
+  .btn-ghost:hover:not(:disabled){text-decoration:underline;}
+
+  .dots{
+    display:flex;
+    gap:5px;
+    justify-content:center;
+    margin-top:20px;
+  }
+  .dot{
+    width:6px;height:6px;border-radius:50%;
+    background:var(--line);
+  }
+  .dot.done{background:var(--gold);}
+  .dot.current{background:var(--forest);}
+
+  /* Results */
+  .results{
+    text-align:center;
+  }
+  .results-intro{
+    max-width:430px;
+    margin:0 auto 22px;
+    color:var(--ink-soft);
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size:0.98rem;
+    line-height:1.6;
+  }
+  .results-intro p{margin:0;}
+  .score-ring{
+    width:172px;height:172px;
+    margin:6px auto 18px;
+    position:relative;
+  }
+  .score-ring svg{width:100%;height:100%;transform:rotate(-90deg);}
+  .score-ring circle{fill:none; stroke-width:12;}
+  .ring-bg{stroke:var(--line);}
+  .ring-fg{stroke:var(--gold); stroke-linecap:round; transition:stroke-dashoffset 1s cubic-bezier(.4,0,.2,1);}
+  .score-center{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+  }
+  .score-num{font-size:2.6rem; font-weight:700; line-height:1;}
+  .score-max{font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:0.78rem; color:var(--ink-soft); margin-top:4px;}
+
+  .band-name{
+    font-size:1.4rem;
+    font-weight:700;
+    margin:0 0 6px;
+    color:var(--forest);
+  }
+  .band-desc{
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color:var(--ink-soft);
+    font-size:0.95rem;
+    max-width:440px;
+    margin:0 auto 26px;
+    line-height:1.55;
+  }
+
+  .band-scale{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    text-align:left;
+    margin:0 auto 26px;
+    max-width:420px;
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  .band-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:9px 12px;
+    border-radius:8px;
+    font-size:0.85rem;
+    border:1px solid transparent;
+  }
+  .band-row .range{
+    width:66px;
+    flex:0 0 auto;
+    color:var(--ink-soft);
+    font-variant-numeric:tabular-nums;
+  }
+  .band-row.active{
+    background:#F3F6F1;
+    border-color:var(--forest);
+    font-weight:600;
+  }
+  .band-row .name{flex:1;}
+
+  .tagline{
+    font-style:italic;
+    color:var(--forest-soft);
+    margin:8px 0 22px;
+  }
+  .cta{
+    display:inline-block;
+    background:var(--forest);
+    color:var(--gold-light);
+    text-decoration:none;
+    padding:12px 26px;
+    border-radius:9px;
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-weight:600;
+    font-size:0.92rem;
+  }
+  .retake{
+    display:block;
+    margin:18px auto 0;
+    background:none;
+    border:none;
+    color:var(--ink-soft);
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size:0.85rem;
+    text-decoration:underline;
+    cursor:pointer;
+  }
+
+  @media (max-width:480px){
+    .card{padding:22px 18px;}
+    .q-text{font-size:1.1rem;}
+    .score-ring{width:150px;height:150px;}
+    .score-num{font-size:2.2rem;}
+    .field-row{flex-direction:column; gap:0;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="masthead">
+    <div class="paw">
+      <svg viewBox="0 0 24 24"><path d="M12 14.5c-2.6 0-5.4 2-5.4 4.7 0 1.3 1 2.1 2.3 2.1.9 0 1.6-.4 3.1-.4s2.2.4 3.1.4c1.3 0 2.3-.8 2.3-2.1 0-2.7-2.8-4.7-5.4-4.7zM6.2 12.8c1.2 0 2.2-1.3 2.2-2.9S7.4 7 6.2 7 4 8.3 4 9.9s1 2.9 2.2 2.9zM10.4 8.6c1.2 0 2.2-1.3 2.2-2.9S11.6 2.8 10.4 2.8 8.2 4.1 8.2 5.7s1 2.9 2.2 2.9zM13.6 8.6c1.2 0 2.2-1.3 2.2-2.9s-1-2.9-2.2-2.9-2.2 1.3-2.2 2.9 1 2.9 2.2 2.9zM17.8 12.8c1.2 0 2.2-1.3 2.2-2.9S19 7 17.8 7s-2.2 1.3-2.2 2.9 1 2.9 2.2 2.9z"/></svg>
+    </div>
+    <h1>PetPlaybook<sup>&#x2122;</sup> Care Continuity Assessment</h1>
+    <p>How prepared is someone else to care for your pet as well as you do?<br>Answer honestly &#8212; your Care Continuity Score&#x2122; is just for you.</p>
+  </div>
+
+  <!-- Step 0: Intro / contact info -->
+  <div id="introStage">
+    <div class="card">
+      <div class="intro-eyebrow">Before We Begin</div>
+      <p class="intro-title">Tell us a little about yourself</p>
+      <p class="intro-sub">Your results are private. We'll use your email only to send you your score summary.</p>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="firstName">First Name</label>
+          <input type="text" id="firstName" placeholder="Jane" autocomplete="given-name" />
+          <span class="field-error" id="firstNameErr">Please enter your first name.</span>
+        </div>
+        <div class="field">
+          <label for="lastName">Last Name</label>
+          <input type="text" id="lastName" placeholder="Smith" autocomplete="family-name" />
+          <span class="field-error" id="lastNameErr">Please enter your last name.</span>
+        </div>
+      </div>
+      <div class="field">
+        <label for="emailInput">Email Address</label>
+        <input type="email" id="emailInput" placeholder="jane@example.com" autocomplete="email" />
+        <span class="field-error" id="emailErr">Please enter a valid email address.</span>
+      </div>
+
+      <div class="nav-row" style="justify-content:flex-end;">
+        <button class="btn-primary" id="startBtn">Start Assessment</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Steps 1-10: Quiz -->
+  <div id="quizStage" style="display:none;">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label" id="progressLabel">Question 1 of 10</div>
+
+    <div class="card">
+      <div class="q-eyebrow" id="qEyebrow">Daily Routine</div>
+      <p class="q-text" id="qText"></p>
+      <div class="options" id="optionsWrap"></div>
+
+      <div class="nav-row">
+        <button class="btn-ghost" id="backBtn">Back</button>
+        <button class="btn-primary" id="nextBtn" disabled>Next</button>
+      </div>
+    </div>
+    <div class="dots" id="dots"></div>
+  </div>
+
+  <!-- Results -->
+  <div id="resultsStage" class="card results" style="display:none;">
+    <div class="results-intro">
+      <p>This isn't a score of how much you love or know your pet.</p>
+      <p>It's a measure of how easily what you know can travel with them.</p>
+    </div>
+    <div class="score-ring">
+      <svg viewBox="0 0 160 160">
+        <circle class="ring-bg" cx="80" cy="80" r="70"></circle>
+        <circle class="ring-fg" id="ringFg" cx="80" cy="80" r="70"></circle>
+      </svg>
+      <div class="score-center">
+        <div class="score-num" id="scoreNum">0</div>
+        <div class="score-max">out of 50</div>
+      </div>
+    </div>
+    <div class="band-name" id="bandName"></div>
+    <p class="band-desc" id="bandDesc"></p>
+
+    <div class="band-scale" id="bandScale"></div>
+
+    <div class="next-steps">
+      <div class="intro-eyebrow">What happens next?</div>
+      <p class="band-desc">PetPlaybook turns the details only you know - routines, comfort cues, preferences, health information and the little things that make your pet unique - into a living, shareable Playbook for the people who care for them.</p>
+      <p class="band-desc">As your pet changes, so should their Playbook.</p>
+    </div>
+    <a class="cta" href="https://www.petplaybook.com" target="_blank" rel="noopener">Learn more at www.petplaybook.com</a>
+    <p class="tagline">Nobody knows your pet like you do.</p>
+    <button class="retake" id="retakeBtn">Retake the assessment</button>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  const questions = [
+    {eyebrow:"Daily Routine", text:"If someone cared for your pet tomorrow, how well would they know their normal daily routine?"},
+    {eyebrow:"Comfort & Calm", text:"Would they know what helps your pet feel safe, comfortable, or calm during stressful situations?"},
+    {eyebrow:"Fears & Triggers", text:"Would they know your pet\u2019s fears, anxieties, or situations that should be avoided?"},
+    {eyebrow:"Early Warning Signs", text:"Would they recognize when your pet is acting \u2018off\u2019 before it becomes a bigger problem?"},
+    {eyebrow:"Medical Needs", text:"Would they know your pet\u2019s medications, supplements, allergies, and how they should be given?"},
+    {eyebrow:"Personality", text:"Would they understand your pet\u2019s unique personality, quirks, preferences, and routines?"},
+    {eyebrow:"Written Record", text:"If your pet could leave one important note for a caregiver, do you think that information is written down somewhere today?"},
+    {eyebrow:"Sitter Confidence", text:"If your pet needed to stay with a new sitter, boarding facility, or family member tomorrow, how confident would you feel?"},
+    {eyebrow:"Professional Handoff", text:"Could your veterinarian, groomer, trainer, or pet sitter quickly understand what makes your pet unique without you being there?"},
+    {eyebrow:"The Real Test", text:"If you couldn\u2019t speak for your pet for the next 24 hours, would someone else truly know them the way you do?"}
+  ];
+
+  const answerLabels = [
+    {label:"Completely", value:5},
+    {label:"Mostly", value:4},
+    {label:"Somewhat", value:3},
+    {label:"Very little", value:2},
+    {label:"Not at all", value:1}
+  ];
+
+  const bands = [
+    {min:40, max:50, name:"Continuity Champion", desc:"You've done an exceptional job making sure others can understand and care for your pet. But pets change - and their Playbook should too. PetPlaybook helps keep what matters organized, shareable and current as your pet's needs evolve."},
+    {min:30, max:39, name:"Strong Foundation", desc:"You know your pet incredibly well and you've shared many of the important details. But there may still be things that live only in your head. PetPlaybook helps capture those little details before someone else needs them."},
+    {min:20, max:29, name:"Important Gaps to Fill", desc:"You know exactly what makes your pet your pet - but another caregiver may not. Routines, comfort cues, quirks and subtle signs that something is 'off' can easily get lost. PetPlaybook helps turn what you know into a Playbook others can follow."},
+    {min:0, max:19, name:"Your Pet Depends on You", desc:"Nobody knows your pet like you do - and right now, much of what makes their care unique may depend on you being there to explain it. PetPlaybook helps capture what you know so the people caring for your pet don't have to guess."}
+  ];
+
+  // Respondent info collected on intro card
+  let respondent = { firstName: '', lastName: '', email: '' };
+
+  let current = 0;
+  const answers = new Array(questions.length).fill(null);
+
+  // Stage elements
+  const introStage  = document.getElementById('introStage');
+  const quizStage   = document.getElementById('quizStage');
+  const resultsStage = document.getElementById('resultsStage');
+
+  // Intro fields
+  const firstNameInput = document.getElementById('firstName');
+  const lastNameInput  = document.getElementById('lastName');
+  const emailInput     = document.getElementById('emailInput');
+  const startBtn       = document.getElementById('startBtn');
+
+  // Quiz elements
+  const progressFill  = document.getElementById('progressFill');
+  const progressLabel = document.getElementById('progressLabel');
+  const qEyebrow      = document.getElementById('qEyebrow');
+  const qText         = document.getElementById('qText');
+  const optionsWrap   = document.getElementById('optionsWrap');
+  const backBtn       = document.getElementById('backBtn');
+  const nextBtn       = document.getElementById('nextBtn');
+  const dotsWrap      = document.getElementById('dots');
+
+  // ---- Intro validation ----
+  function validateEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); }
+
+  function showErr(inputEl, errEl, show){
+    if(show){ inputEl.classList.add('error'); errEl.classList.add('show'); }
+    else { inputEl.classList.remove('error'); errEl.classList.remove('show'); }
+  }
+
+  startBtn.addEventListener('click', function(){
+    const fn = firstNameInput.value.trim();
+    const ln = lastNameInput.value.trim();
+    const em = emailInput.value.trim();
+    let ok = true;
+
+    showErr(firstNameInput, document.getElementById('firstNameErr'), !fn);
+    showErr(lastNameInput,  document.getElementById('lastNameErr'),  !ln);
+    showErr(emailInput,     document.getElementById('emailErr'),     !validateEmail(em));
+
+    if(!fn || !ln || !validateEmail(em)) return;
+
+    respondent = { firstName: fn, lastName: ln, email: em };
+    introStage.style.display = 'none';
+    quizStage.style.display  = 'block';
+    renderQuestion();
+  });
+
+  // Allow Enter key on intro fields
+  [firstNameInput, lastNameInput, emailInput].forEach(function(el){
+    el.addEventListener('keydown', function(e){ if(e.key === 'Enter') startBtn.click(); });
+  });
+
+  // ---- Quiz ----
+  function renderDots(){
+    dotsWrap.innerHTML = '';
+    questions.forEach(function(_, i){
+      const d = document.createElement('div');
+      d.className = 'dot' + (i === current ? ' current' : (answers[i] !== null ? ' done' : ''));
+      dotsWrap.appendChild(d);
+    });
+  }
+
+  function renderQuestion(){
+    const q = questions[current];
+    qEyebrow.textContent = q.eyebrow;
+    qText.textContent = q.text;
+    progressFill.style.width = (current / questions.length * 100) + '%';
+    progressLabel.textContent = 'Question ' + (current+1) + ' of ' + questions.length;
+
+    optionsWrap.innerHTML = '';
+    answerLabels.forEach(function(opt){
+      const el = document.createElement('div');
+      el.className = 'option' + (answers[current] === opt.value ? ' selected' : '');
+      el.innerHTML = '<div class="bullet"></div><div class="option-label">' + opt.label + '</div><div class="option-val">' + opt.value + '</div>';
+      el.addEventListener('click', function(){
+        answers[current] = opt.value;
+        renderQuestion();
+      });
+      optionsWrap.appendChild(el);
+    });
+
+    backBtn.disabled = current === 0;
+    nextBtn.disabled = answers[current] === null;
+    nextBtn.textContent = current === questions.length - 1 ? 'See my score' : 'Next';
+    renderDots();
+  }
+
+  backBtn.addEventListener('click', function(){
+    if(current > 0){ current--; renderQuestion(); }
+    else {
+      // Go back to intro
+      quizStage.style.display = 'none';
+      introStage.style.display = 'block';
+    }
+  });
+
+  nextBtn.addEventListener('click', function(){
+    if(answers[current] === null) return;
+    if(current < questions.length - 1){
+      current++;
+      renderQuestion();
+    } else {
+      showResults();
+    }
+  });
+
+  // ---- Results + submission ----
+  function showResults(){
+    const total = answers.reduce(function(a,b){ return a+b; }, 0);
+    const band  = bands.find(function(b){ return total >= b.min && total <= b.max; });
+
+    quizStage.style.display   = 'none';
+    resultsStage.style.display = 'block';
+
+    document.getElementById('scoreNum').textContent = total;
+    document.getElementById('bandName').textContent = band.name;
+    document.getElementById('bandDesc').textContent = band.desc;
+
+    const circ  = 2 * Math.PI * 70;
+    const ringFg = document.getElementById('ringFg');
+    ringFg.style.strokeDasharray  = circ;
+    ringFg.style.strokeDashoffset = circ;
+    requestAnimationFrame(function(){
+      ringFg.style.strokeDashoffset = circ - (circ * (total / 50));
+    });
+
+    const scaleWrap = document.getElementById('bandScale');
+    scaleWrap.innerHTML = '';
+    bands.forEach(function(b){
+      const row = document.createElement('div');
+      row.className = 'band-row' + (b === band ? ' active' : '');
+      const rangeText = b.max === 50 ? (b.min + '\u201350') : (b.min === 0 ? 'Below 20' : (b.min + '\u2013' + b.max));
+      row.innerHTML = '<div class="range">' + rangeText + '</div><div class="name">' + b.name + '</div>';
+      scaleWrap.appendChild(row);
+    });
+
+    // Submit to backend (fire-and-forget; user already sees results)
+    fetch('/api/assessment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        firstName: respondent.firstName,
+        lastName:  respondent.lastName,
+        email:     respondent.email,
+        answers:   answers
+      })
+    }).catch(function(){ /* silent — results already shown */ });
+  }
+
+  document.getElementById('retakeBtn').addEventListener('click', function(){
+    current = 0;
+    answers.fill(null);
+    respondent = { firstName: '', lastName: '', email: '' };
+    firstNameInput.value = '';
+    lastNameInput.value  = '';
+    emailInput.value     = '';
+    resultsStage.style.display = 'none';
+    introStage.style.display   = 'block';
+  });
+
+})();
+</script>
+</body>
+</html>
