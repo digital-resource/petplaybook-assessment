@@ -133,7 +133,7 @@
     color:var(--forest);
     letter-spacing:0.02em;
   }
-  .field input{
+  .field input, .field select{
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-size:0.95rem;
     padding:11px 14px;
@@ -144,8 +144,9 @@
     outline:none;
     transition:border-color .15s ease;
   }
-  .field input:focus{border-color:var(--forest);}
-  .field input.error{border-color:#c0392b;}
+  .field select{appearance:auto;}
+  .field input:focus, .field select:focus{border-color:var(--forest);}
+  .field input.error, .field select.error{border-color:#c0392b;}
   .field-error{
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-size:0.75rem;
@@ -402,6 +403,26 @@
         </div>
       </div>
       <div class="field">
+        <label for="heardAboutInput">How did you hear about us?</label>
+        <select id="heardAboutInput">
+          <option value="" disabled selected>Please select...</option>
+          <option value="Instagram">Instagram</option>
+          <option value="Facebook">Facebook</option>
+          <option value="TikTok">TikTok</option>
+          <option value="Google Search">Google Search</option>
+          <option value="A friend or family member">A friend or family member</option>
+          <option value="Veterinarian or pet professional">Veterinarian or pet professional</option>
+          <option value="Podcast or blog">Podcast or blog</option>
+          <option value="Other">Other</option>
+        </select>
+        <span class="field-error" id="heardAboutErr">Please let us know how you heard about us.</span>
+      </div>
+      <div class="field" id="heardAboutOtherField" style="display:none;">
+        <label for="heardAboutOtherInput">Please tell us more</label>
+        <input type="text" id="heardAboutOtherInput" placeholder="Tell us where you heard about us" />
+        <span class="field-error" id="heardAboutOtherErr">Please tell us how you heard about us.</span>
+      </div>
+      <div class="field">
         <label for="emailInput">Email Address</label>
         <input type="email" id="emailInput" placeholder="jane@example.com" autocomplete="email" />
         <span class="field-error" id="emailErr">Please enter a valid email address.</span>
@@ -495,7 +516,7 @@
   ];
 
   // Respondent info collected on intro card
-  let respondent = { firstName: '', lastName: '', email: '' };
+  let respondent = { firstName: '', lastName: '', email: '', heardAbout: '', heardAboutOther: '' };
 
   let current = 0;
   const answers = new Array(questions.length).fill(null);
@@ -509,7 +530,20 @@
   const firstNameInput = document.getElementById('firstName');
   const lastNameInput  = document.getElementById('lastName');
   const emailInput     = document.getElementById('emailInput');
+  const heardAboutInput      = document.getElementById('heardAboutInput');
+  const heardAboutOtherField = document.getElementById('heardAboutOtherField');
+  const heardAboutOtherInput = document.getElementById('heardAboutOtherInput');
   const startBtn       = document.getElementById('startBtn');
+
+  heardAboutInput.addEventListener('change', function(){
+    const isOther = heardAboutInput.value === 'Other';
+    heardAboutOtherField.style.display = isOther ? 'flex' : 'none';
+    if(!isOther){
+      heardAboutOtherInput.value = '';
+      showErr(heardAboutOtherInput, document.getElementById('heardAboutOtherErr'), false);
+    }
+    showErr(heardAboutInput, document.getElementById('heardAboutErr'), false);
+  });
 
   // Quiz elements
   const progressFill  = document.getElementById('progressFill');
@@ -533,22 +567,26 @@
     const fn = firstNameInput.value.trim();
     const ln = lastNameInput.value.trim();
     const em = emailInput.value.trim();
-    let ok = true;
+    const heard = heardAboutInput.value.trim();
+    const heardOther = heardAboutOtherInput.value.trim();
+    const heardOtherNeeded = heard === 'Other';
 
     showErr(firstNameInput, document.getElementById('firstNameErr'), !fn);
     showErr(lastNameInput,  document.getElementById('lastNameErr'),  !ln);
     showErr(emailInput,     document.getElementById('emailErr'),     !validateEmail(em));
+    showErr(heardAboutInput, document.getElementById('heardAboutErr'), !heard);
+    showErr(heardAboutOtherInput, document.getElementById('heardAboutOtherErr'), heardOtherNeeded && !heardOther);
 
-    if(!fn || !ln || !validateEmail(em)) return;
+    if(!fn || !ln || !validateEmail(em) || !heard || (heardOtherNeeded && !heardOther)) return;
 
-    respondent = { firstName: fn, lastName: ln, email: em };
+    respondent = { firstName: fn, lastName: ln, email: em, heardAbout: heard, heardAboutOther: heardOtherNeeded ? heardOther : '' };
     introStage.style.display = 'none';
     quizStage.style.display  = 'block';
     renderQuestion();
   });
 
   // Allow Enter key on intro fields
-  [firstNameInput, lastNameInput, emailInput].forEach(function(el){
+  [firstNameInput, lastNameInput, emailInput, heardAboutOtherInput].forEach(function(el){
     el.addEventListener('keydown', function(e){ if(e.key === 'Enter') startBtn.click(); });
   });
 
@@ -644,6 +682,8 @@
         firstName: respondent.firstName,
         lastName:  respondent.lastName,
         email:     respondent.email,
+        heardAbout:      respondent.heardAbout,
+        heardAboutOther: respondent.heardAboutOther,
         answers:   answers
       })
     }).catch(function(){ /* silent — results already shown */ });
@@ -652,10 +692,13 @@
   document.getElementById('retakeBtn').addEventListener('click', function(){
     current = 0;
     answers.fill(null);
-    respondent = { firstName: '', lastName: '', email: '' };
+    respondent = { firstName: '', lastName: '', email: '', heardAbout: '', heardAboutOther: '' };
     firstNameInput.value = '';
     lastNameInput.value  = '';
     emailInput.value     = '';
+    heardAboutInput.value = '';
+    heardAboutOtherInput.value = '';
+    heardAboutOtherField.style.display = 'none';
     resultsStage.style.display = 'none';
     introStage.style.display   = 'block';
   });

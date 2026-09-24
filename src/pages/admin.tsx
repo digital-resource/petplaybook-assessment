@@ -12,6 +12,8 @@ interface AssessmentResponse {
   firstName: string;
   lastName: string;
   email: string;
+  heardAbout: string | null;
+  heardAboutOther: string | null;
   q1: number; q2: number; q3: number; q4: number; q5: number;
   q6: number; q7: number; q8: number; q9: number; q10: number;
   totalScore: number;
@@ -24,6 +26,7 @@ interface AssessmentData {
   total: number;
   averageScore: number;
   bandCounts: Record<string, number>;
+  heardAboutCounts: Record<string, number>;
 }
 
 const BAND_ORDER = [
@@ -39,6 +42,18 @@ const BAND_RANGE: Record<string, string> = {
   'Important Gaps to Fill': '20-29',
   'Your Pet Depends on You': '0-19',
 };
+
+const HEARD_ABOUT_ORDER = [
+  'Instagram',
+  'Facebook',
+  'TikTok',
+  'Google Search',
+  'A friend or family member',
+  'Veterinarian or pet professional',
+  'Podcast or blog',
+  'Other',
+  'Not provided',
+];
 
 export default function AdminPage() {
   const [password, setPassword] = useState('');
@@ -127,11 +142,14 @@ export default function AdminPage() {
     downloadCSV(csv, 'petplaybook-waitlist.csv');
   };
 
+  const formatHeardAbout = (r: AssessmentResponse) =>
+    r.heardAbout === 'Other' ? (r.heardAboutOther || 'Other') : (r.heardAbout || '-');
+
   const handleExportAssessmentsCSV = () => {
     if (!assessmentData) return;
-    const headers = 'ID,First Name,Last Name,Email,Q1,Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9,Q10,Total Score,Band,Submitted At';
+    const headers = 'ID,First Name,Last Name,Email,How Heard About Us,Q1,Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9,Q10,Total Score,Band,Submitted At';
     const rows = assessmentData.responses.map(r =>
-      `${r.id},"${r.firstName}","${r.lastName}","${r.email}",${r.q1},${r.q2},${r.q3},${r.q4},${r.q5},${r.q6},${r.q7},${r.q8},${r.q9},${r.q10},${r.totalScore},"${r.scoreBand}","${new Date(r.createdAt).toLocaleString()}"`
+      `${r.id},"${r.firstName}","${r.lastName}","${r.email}","${formatHeardAbout(r)}",${r.q1},${r.q2},${r.q3},${r.q4},${r.q5},${r.q6},${r.q7},${r.q8},${r.q9},${r.q10},${r.totalScore},"${r.scoreBand}","${new Date(r.createdAt).toLocaleString()}"`
     );
     downloadCSV([headers, ...rows].join('\n'), 'petplaybook-assessments.csv');
   };
@@ -319,6 +337,31 @@ export default function AdminPage() {
                     </div>
                   </div>
 
+                  {/* How they heard about us */}
+                  <div className="rounded-2xl border border-border bg-card p-5 mb-6">
+                    <h3 className="text-sm font-semibold text-foreground mb-4">How They Heard About Us</h3>
+                    <div className="flex flex-col gap-3">
+                      {HEARD_ABOUT_ORDER.filter(source => (assessmentData.heardAboutCounts[source] ?? 0) > 0).map(source => {
+                        const count = assessmentData.heardAboutCounts[source] ?? 0;
+                        const pct = assessmentData.total > 0 ? Math.round((count / assessmentData.total) * 100) : 0;
+                        return (
+                          <div key={source}>
+                            <div className="flex justify-between text-xs text-muted-foreground mb-1">
+                              <span className="font-medium text-foreground">{source}</span>
+                              <span>{count} ({pct}%)</span>
+                            </div>
+                            <div className="h-2 bg-muted rounded-full overflow-hidden">
+                              <div
+                                className="h-full bg-primary rounded-full transition-all"
+                                style={{ width: `${pct}%` }}
+                              />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
                   {/* Individual responses */}
                   <div className="flex items-center justify-between mb-4">
                     <p className="text-muted-foreground text-sm">{assessmentData.total} {assessmentData.total === 1 ? 'response' : 'responses'}</p>
@@ -340,6 +383,7 @@ export default function AdminPage() {
                             <th className="text-left px-4 py-4 text-muted-foreground font-semibold">#</th>
                             <th className="text-left px-4 py-4 text-muted-foreground font-semibold">Name</th>
                             <th className="text-left px-4 py-4 text-muted-foreground font-semibold">Email</th>
+                            <th className="text-left px-4 py-4 text-muted-foreground font-semibold">Heard About Us</th>
                             <th className="text-left px-4 py-4 text-muted-foreground font-semibold">Score</th>
                             <th className="text-left px-4 py-4 text-muted-foreground font-semibold">Band</th>
                             <th className="text-left px-4 py-4 text-muted-foreground font-semibold">Submitted</th>
@@ -351,6 +395,7 @@ export default function AdminPage() {
                               <td className="px-4 py-3 text-muted-foreground">{i + 1}</td>
                               <td className="px-4 py-3 text-foreground font-medium">{r.firstName} {r.lastName}</td>
                               <td className="px-4 py-3 text-muted-foreground">{r.email}</td>
+                              <td className="px-4 py-3 text-muted-foreground text-xs">{formatHeardAbout(r)}</td>
                               <td className="px-4 py-3">
                                 <span className="font-bold text-foreground">{r.totalScore}</span>
                                 <span className="text-muted-foreground">/50</span>

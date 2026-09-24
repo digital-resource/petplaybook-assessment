@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import { getSupabaseClient } from "../../supabase.js";
 import { calculateTotalScore, getScoreBand } from "../../lib/scoreBands.js";
+import { HEARD_ABOUT_OPTIONS, type HeardAboutOption } from "../../lib/heardAbout.js";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -8,6 +9,8 @@ interface AssessmentBody {
 	firstName?: unknown;
 	lastName?: unknown;
 	email?: unknown;
+	heardAbout?: unknown;
+	heardAboutOther?: unknown;
 	answers?: unknown;
 }
 
@@ -23,12 +26,21 @@ export default async function handler(req: Request, res: Response) {
 	const firstName = typeof body.firstName === "string" ? body.firstName.trim() : "";
 	const lastName = typeof body.lastName === "string" ? body.lastName.trim() : "";
 	const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
+	const heardAbout = typeof body.heardAbout === "string" ? body.heardAbout.trim() : "";
+	const heardAboutOther =
+		typeof body.heardAboutOther === "string" ? body.heardAboutOther.trim() : "";
 
 	if (!firstName || !lastName) {
 		return res.status(400).json({ error: "First name and last name are required." });
 	}
 	if (!email || !EMAIL_RE.test(email)) {
 		return res.status(400).json({ error: "A valid email address is required." });
+	}
+	if (!HEARD_ABOUT_OPTIONS.includes(heardAbout as HeardAboutOption)) {
+		return res.status(400).json({ error: "Please tell us how you heard about us." });
+	}
+	if (heardAbout === "Other" && !heardAboutOther) {
+		return res.status(400).json({ error: "Please tell us how you heard about us." });
 	}
 	if (!isValidAnswers(body.answers)) {
 		return res
@@ -47,6 +59,8 @@ export default async function handler(req: Request, res: Response) {
 			first_name: firstName,
 			last_name: lastName,
 			email,
+			heard_about: heardAbout,
+			heard_about_other: heardAbout === "Other" ? heardAboutOther : null,
 			q1: answers[0],
 			q2: answers[1],
 			q3: answers[2],
